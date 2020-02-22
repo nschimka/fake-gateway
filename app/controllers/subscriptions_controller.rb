@@ -2,7 +2,7 @@ class SubscriptionsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   FAKEPAY_KEY = ENV['FAKEPAY_KEY']
-  
+
   # For the front-end devs to figure out
   def new
   end
@@ -10,14 +10,7 @@ class SubscriptionsController < ApplicationController
   def create
     response = HTTParty.post(
       "https://www.fakepay.io/purchase",
-      body: {
-        amount: params[:amount],
-        card_number: params[:card_number],
-        cvv: params[:cvv],
-        expiration_month: params[:expiration_month],
-        expiration_year: params[:expiration_year],
-        zip_code: params[:zip_code]
-      }.to_json,
+      :body => purchase_params.to_json,
       headers: {
       	"Accept" => "application/json",
         "Content-Type" => "application/json",
@@ -26,9 +19,23 @@ class SubscriptionsController < ApplicationController
   	)
 
   	if response.body["success"]
-  	  render json: response.body["token"]
+  	  @sub = Subscription.create(subscription_params)
+  	  render json: @sub
   	else
   	  render json: response.body["error_code"]
   	end
+  end
+
+  private
+
+  def purchase_params
+  	params.require(:subscription).permit(:first_name, :last_name, :amount,
+  	  :address, :city, :state, :country, :zip, :card_number, :cvv,
+  	  :expiration_year, :expiration_month)
+  end
+
+  def subscription_params
+  	purchase_params.slice(:first_name, :last_name, :address, :city, :state,
+  	  :country, :zip)
   end
 end
