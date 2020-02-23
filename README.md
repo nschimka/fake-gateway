@@ -7,6 +7,11 @@ This is the back-end API integration for the fakepay (https://www.fakepay.io/cha
 Run the Rails server:
 `rails server`
 
+Then run the following commands from the main Fakepay directory:
+```touch .env
+echo FAKEPAY_KEY = put-your-key-here >> .env
+```
+
 ## Required Attributes
 
 - first_name

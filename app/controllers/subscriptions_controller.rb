@@ -1,29 +1,17 @@
 class SubscriptionsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  FAKEPAY_KEY = ENV['FAKEPAY_KEY']
-
   # For the front-end devs to figure out
   def new
   end
 
   def create
-    response = HTTParty.post(
-      "https://www.fakepay.io/purchase",
-      :body => purchase_params.to_json,
-      headers: {
-      	"Accept" => "application/json",
-        "Content-Type" => "application/json",
-        "Authorization" => "Token #{FAKEPAY_KEY}"
-      }
-  	)
-
-    json_response = JSON.parse(response.body)
-  	if json_response["success"]
+    response = GatewayCall.new(purchase_params).purchase
+    if response["success"]
   	  @sub = Subscription.create(subscription_params)
   	  if @sub.save
   	    @sub.create_payment_profile(
-  	      token: json_response["token"],
+  	      token: response["token"],
   	      expiration_month: purchase_params[:expiration_month],
   	      expiration_year: purchase_params[:expiration_year]
   	    )
@@ -31,8 +19,8 @@ class SubscriptionsController < ApplicationController
   	  else
   	  	render json: @sub.errors, status: :unprocessable_entity
   	  end
-  	else
-  	  render json: json_response["error_code"], status: :unprocessable_entity
+    else
+      render json: translated_error(response), status: :unprocessable_entity
   	end
   end
 
@@ -47,5 +35,9 @@ class SubscriptionsController < ApplicationController
   def subscription_params
   	purchase_params.slice(:first_name, :last_name, :address, :city, :state,
   	  :country, :zip_code)
+  end
+
+  def translated_error(response)
+    GatewayCall::GATEWAY_ERRORS[response["error_code"]]
   end
 end
