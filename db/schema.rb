@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_22_215209) do
+ActiveRecord::Schema.define(version: 2020_02_22_233800) do
+
+  create_table "payment_profiles", force: :cascade do |t|
+    t.string "token"
+    t.string "expiration_month"
+    t.string "expiration_year"
+    t.integer "subscription_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "subscriptions", force: :cascade do |t|
     t.string "first_name"
@@ -19,7 +28,7 @@ ActiveRecord::Schema.define(version: 2020_02_22_215209) do
     t.string "city"
     t.string "state"
     t.string "country"
-    t.string "zip"
+    t.string "zip_code"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
