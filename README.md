@@ -12,13 +12,13 @@ echo FAKEPAY_KEY = put-your-key-here >> .env
 ```
 
 Then run the Rails server:
-`rails server`
+```rails server```
 
 Finally, setup and seed the database to create your products:
-`rake db:setup`
+```rake db:setup```
 
-Theoretically you would run this to run the full test suite...but it returns a load error and I'm not sure why. If you run the tests individually, they all pass.
-`bundle exec rspec spec`
+You can run the test suite with this:
+```bundle exec rspec spec```
 
 Interactions with the Fakepay gateway have been pre-run and stored as VCRs.
 
