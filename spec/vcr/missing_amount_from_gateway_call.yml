@@ -12,7 +12,7 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - Token 18872fe8199db7ad04e6b9e0425a3c
+      - Token tok
   response:
     status:
       code: 422

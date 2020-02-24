@@ -15,7 +15,7 @@ class GatewayCall
   }
 
   def initialize(params)
-    @amount = params[:amount]
+    @amount = determine_amount_from_product(params[:product_id])
     @card_number = params[:card_number]
     @expiration_year = params[:expiration_year]
     @expiration_month = params[:expiration_month]
@@ -24,7 +24,7 @@ class GatewayCall
   end
 
   def purchase
-    response = HTTParty.post(
+    HTTParty.post(
       FAKEPAY_URL,
       :body => purchase_attributes.to_json,
       headers: {
@@ -48,5 +48,11 @@ class GatewayCall
       zip_code: zip_code,
       cvv: cvv
 	}
+  end
+
+  def determine_amount_from_product(product_id)
+    return nil if product_id.nil?
+    prod = Product.where(id: product_id).first
+    return prod.amount_in_cents
   end
 end

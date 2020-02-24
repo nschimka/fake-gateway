@@ -2,19 +2,22 @@
 
 This is the back-end API integration for the fakepay (https://www.fakepay.io/challenge) gateway. When passed customer information and credit card data, a purchase will be attempted for them that, once successful, will create a subscription and stored payment profile for them. The payment profile will reference back to the card stored at the gateway using a token.
 
-When you send a subscription request to the API, it will return a response for that new subscription. It won't contain the payment profile information. If the subscription or payment fail, an error will be returned instead.
+When you send a subscription request to the API, it will return a response for that new subscription. (It won't contain the payment profile information, for no real reason other than I didn't get to it). If the subscription or payment fail, an error will be returned instead.
 
 ## Getting Started
 
-Run the Rails server:
-`rails server`
-
-Then run the following commands from the main Fakepay directory:
+Run the following commands from the main Fakepay directory:
 ```touch .env
 echo FAKEPAY_KEY = put-your-key-here >> .env
 ```
 
-To run the test suite:
+Then run the Rails server:
+`rails server`
+
+Finally, setup and seed the database to create your products:
+`rake db:setup`
+
+Theoretically you would run this to run the full test suite...but it returns a load error and I'm not sure why. If you run the tests individually, they all pass.
 `bundle exec rspec spec`
 
 Interactions with the Fakepay gateway have been pre-run and stored as VCRs.
@@ -22,20 +25,28 @@ Interactions with the Fakepay gateway have been pre-run and stored as VCRs.
 ## Attributes
 
 These are required:
+
 - first_name
 - last_name
-- amount
+- product_id
 - card_number (won't be stored)
 - cvv
-- expiration_month
-- expiration_year
+- expiration_month, as one or two digits
+- expiration_year, as four digits
 - zip_code
 
+There are three product IDs you can pass; their corresponding products should already be set up in the database:
+
+- 1 => this is for the $19.99/month Bronze Plan
+- 2 => this is for the $49.00/month Silver Plan
+- 3 => this is for the $99.00/month Gold Plan
+
 These are optional, to be stored with the subscriber:
+
 - address
 - city
-- state
-- country
+- state (best to pass as an ISO code but there's no enforcement of this)
+- country (best to pass as an ISO code but there's no enforcement of this)
 
 ## Test Cards & Values
 
@@ -65,10 +76,10 @@ curl "localhost:3000/subscriptions.json" \
       "state": "TX",
       "country": "US",
       "zip_code": "10045",
-      "amount": "1000",
+      "product_id": 3,
       "card_number": "4242424242424242",
       "cvv": "123",
-      "expiration_month": "01",
+      "expiration_month": "1",
       "expiration_year": "2024"
     }
   }'
@@ -90,7 +101,7 @@ curl "localhost:3000/subscriptions.json" \
       "state": "TX",
       "country": "US",
       "zip_code": "10045",
-      "amount": "1000",
+      "product_id": 2,
       "card_number": "4242424242424242",
       "cvv": "123",
       "expiration_month": "01",
@@ -115,7 +126,7 @@ curl "localhost:3000/subscriptions.json" \
       "state": "TX",
       "country": "US",
       "zip_code": "10045",
-      "amount": "1000",
+      "product_id": 1,
       "card_number": "4242424242420089",
       "cvv": "123",
       "expiration_month": "01",
@@ -123,4 +134,3 @@ curl "localhost:3000/subscriptions.json" \
     }
   }'
 ```
-

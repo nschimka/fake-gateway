@@ -1,4 +1,3 @@
-require "spec_helper"
 require "rails_helper"
 
 RSpec.describe SubscriptionsController do
@@ -13,7 +12,7 @@ RSpec.describe SubscriptionsController do
         state: "TX",
         country: "US",
         zip_code: "78216",
-        amount: "1000",
+        product_id: 1,
         card_number: "4242424242424242",
         expiration_month: "10",
         expiration_year: "2023",
@@ -27,14 +26,7 @@ RSpec.describe SubscriptionsController do
         post :create, { :params => params }
         assert_response :created
 
-        # Surely there is a better way to write this?
-        expect(Subscription.last.first_name).to eql("Fiona")
-        expect(Subscription.last.last_name).to eql("Pomegranate")
-        expect(Subscription.last.address).to eql("123 Main St")
-        expect(Subscription.last.city).to eql("San Antonio")
-        expect(Subscription.last.state).to eql("TX")
-        expect(Subscription.last.country).to eql("US")
-        expect(Subscription.last.zip_code).to eql("78216")
+        expect(response.body).to eql(Subscription.last.to_json)
       end
     end
 
@@ -59,7 +51,7 @@ RSpec.describe SubscriptionsController do
         state: "TX",
         country: "US",
         zip_code: "78216",
-        amount: "1000",
+        product_id: 1,
         card_number: "4242424242424242",
         expiration_month: "10",
         expiration_year: "2023",
@@ -69,7 +61,7 @@ RSpec.describe SubscriptionsController do
     end
 
     # A better test would be to test for `eql(the exact response)`
-    # But my JSON response has weird backslashes that I'm not sure
+    # But my JSON response has escaped quotes that I'm not sure
     # how to strip out
   	it "returns an appropriate error" do
       VCR.use_cassette('successful_purchase') do
@@ -87,7 +79,7 @@ RSpec.describe SubscriptionsController do
         first_name: "Fiona",
         last_name: "Pomegranate",
         zip_code: "78216",
-        amount: "1000",
+        product_id: 1,
         card_number: "4242424242424242",
         expiration_month: "10",
         expiration_year: "2010",

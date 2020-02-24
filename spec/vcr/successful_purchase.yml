@@ -5,14 +5,14 @@ http_interactions:
     uri: https://www.fakepay.io/purchase
     body:
       encoding: UTF-8
-      string: '{"amount":"1000","card_number":"4242424242424242","expiration_year":"2023","expiration_month":"10","zip_code":"78216","cvv":"123"}'
+      string: '{"amount":1999,"card_number":"4242424242424242","expiration_year":"2023","expiration_month":"01","zip_code":"54321","cvv":"123"}'
     headers:
       Accept:
       - application/json
       Content-Type:
       - application/json
       Authorization:
-      - Token 18872fe8199db7ad04e6b9e0425a3c
+      - Token tok
   response:
     status:
       code: 200
@@ -21,7 +21,7 @@ http_interactions:
       Server:
       - Cowboy
       Date:
-      - Sun, 23 Feb 2020 22:56:38 GMT
+      - Mon, 24 Feb 2020 17:08:53 GMT
       Connection:
       - keep-alive
       X-Frame-Options:
@@ -39,20 +39,20 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Etag:
-      - W/"eb759598ae84eaec8d04c32e37107ef2"
+      - W/"6a935ef9f7fa847450036b0e94a15eef"
       Cache-Control:
       - max-age=0, private, must-revalidate
       X-Request-Id:
-      - 8ce9e05e-f9e0-4c39-8237-1fd11cc0499f
+      - d8ba1bb4-4308-4b58-9d35-30ffcceb523a
       X-Runtime:
-      - '0.046235'
+      - '0.032025'
       Transfer-Encoding:
       - chunked
       Via:
       - 1.1 vegur
     body:
       encoding: UTF-8
-      string: '{"token":"a68be38ed2195e10fbe174ff475bb9","success":true,"error_code":null}'
+      string: '{"token":"807beb70c828c823ea6c2fc4d29b9c","success":true,"error_code":null}'
     http_version: null
-  recorded_at: Sun, 23 Feb 2020 22:56:38 GMT
+  recorded_at: Mon, 24 Feb 2020 17:08:54 GMT
 recorded_with: VCR 5.1.0

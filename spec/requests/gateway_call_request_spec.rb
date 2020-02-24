@@ -1,18 +1,15 @@
-require "spec_helper"
 require "rails_helper"
 
 RSpec.describe GatewayCall do
 
   context "when passed all minimum information" do
     let!(:params) do {
-      subscription: {
-        amount: "1000",
-        cvv: "123",
-        expiration_month: "01",
-        expiration_year: "2023",
-        card_number: "4242424242424242",
-        zip_code: "54321"
-      }
+      product_id: 1,
+      cvv: "123",
+      expiration_month: "01",
+      expiration_year: "2023",
+      card_number: "4242424242424242",
+      zip_code: "54321"
     }
     end
 
@@ -26,19 +23,17 @@ RSpec.describe GatewayCall do
     end
   end
 
-	context "when not passed an amount" do
+	context "when not passed a product_id" do
   	let!(:params) do { 
-  	  subscription: {
-  	  	cvv: "123",
-  	  	expiration_month: "12",
-  	  	expiration_year: "2024",
-  	  	card_number: "4242424242424242",
-  	  	zip_code: "12345"
-  	  }
+	  	cvv: "123",
+	  	expiration_month: "12",
+	  	expiration_year: "2024",
+	  	card_number: "4242424242424242",
+	  	zip_code: "12345"
   	}
     end
 
-  	it "returns an error" do
+  	it "returns an error about the amount missing" do
   	  VCR.use_cassette('missing_amount_from_gateway_call') do
   	    response = GatewayCall.new(params).purchase
 

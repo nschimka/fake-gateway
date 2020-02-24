@@ -30,14 +30,14 @@ class SubscriptionsController < ApplicationController
   private
 
   def purchase_params
-  	params.require(:subscription).permit(:first_name, :last_name, :amount,
+  	params.require(:subscription).permit(:first_name, :last_name,
   	  :address, :city, :state, :country, :zip_code, :card_number, :cvv,
-  	  :expiration_year, :expiration_month)
+  	  :expiration_year, :expiration_month, :product_id)
   end
 
   def subscription_params
   	purchase_params.slice(:first_name, :last_name, :address, :city, :state,
-  	  :country, :zip_code)
+  	  :country, :zip_code, :product_id)
   end
 
   def translated_error(response)
