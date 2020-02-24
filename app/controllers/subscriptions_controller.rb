@@ -5,6 +5,9 @@ class SubscriptionsController < ApplicationController
   def new
   end
 
+  # Not ideal because the purchase can succeed even if the
+  # subscription isn't created. Should create the subscription
+  # first, then rollback if the purchase fails
   def create
     response = GatewayCall.new(purchase_params).purchase
     if response["success"]
@@ -17,7 +20,7 @@ class SubscriptionsController < ApplicationController
   	    )
   	    render json: @sub, status: :created
   	  else
-  	  	render json: @sub.errors, status: :unprocessable_entity
+  	  	render json: @sub.errors.full_messages, status: :unprocessable_entity
   	  end
     else
       render json: translated_error(response), status: :unprocessable_entity

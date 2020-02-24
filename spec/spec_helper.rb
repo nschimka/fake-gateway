@@ -13,7 +13,22 @@
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+
+require "vcr"
+require "webmock"
+
+VCR.configure do |c|
+  c.cassette_library_dir = "spec/vcr"
+  c.hook_into :webmock
+end
+
 RSpec.configure do |config|
+  config.before(:each) do
+    WebMock.reset!
+    WebMock.disable_net_connect!
+  end
+
+  require File.expand_path("../../config/environment", __FILE__)
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

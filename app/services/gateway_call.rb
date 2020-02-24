@@ -1,6 +1,7 @@
 class GatewayCall
 
   FAKEPAY_KEY = ENV['FAKEPAY_KEY']
+  FAKEPAY_URL = "https://www.fakepay.io/purchase"
 
   GATEWAY_ERRORS = {
   	1000001 => "Invalid credit card number",
@@ -24,7 +25,7 @@ class GatewayCall
 
   def purchase
     response = HTTParty.post(
-      "https://www.fakepay.io/purchase",
+      FAKEPAY_URL,
       :body => purchase_attributes.to_json,
       headers: {
       	"Accept" => "application/json",

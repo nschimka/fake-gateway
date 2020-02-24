@@ -4,7 +4,7 @@ class PaymentProfilesController < ApplicationController
     if @payment_profile.save
       render json: @payment_profile
     else
-      render json: @payment_profile.errors
+      render json: @payment_profile.errors.full_messages
     end
   end
 
